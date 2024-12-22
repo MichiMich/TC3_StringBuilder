@@ -1,0 +1,245 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+  <Itf Name="I_StringBuilder" Id="{01f8af8d-11f8-07a0-05e0-25e4eaaffbdc}">
+    <Declaration><![CDATA[INTERFACE I_StringBuilder EXTENDS I_QueryInterface
+]]></Declaration>
+    <Method Name="Append" Id="{1f60ff4f-fbc3-0b8a-0e6c-dddda3f553d2}">
+      <Declaration><![CDATA[// Appends the given string to the end of the string builder's contents.
+METHOD Append : I_StringBuilder
+VAR_INPUT
+	sValue : T_LongString;
+END_VAR]]></Declaration>
+    </Method>
+    <Method Name="AppendAny" Id="{4e272eba-e425-05de-2ee4-905700c7026b}">
+      <Declaration><![CDATA[// Appends the given value to the end of the string builder's contents.
+METHOD AppendAny : I_StringBuilder
+VAR_INPUT
+	Value : ANY;
+END_VAR]]></Declaration>
+    </Method>
+    <Method Name="AppendBuffer" Id="{76c3a940-b6e5-0000-2508-a918cabf6be8}">
+      <Declaration><![CDATA[// !!!UNSAFE!!! THIS WILL APPEND UP TO THE NULL CHARACTER. IF NO NULL EXISTS, THIS WILL RUN FOREVER!
+// | Append raw values directly to the internal string buffer. This is meant for appending dynamic strings to the string builder.
+METHOD AppendBuffer : I_StringBuilder
+VAR_INPUT
+	pBuffer : POINTER TO BYTE;
+END_VAR]]></Declaration>
+    </Method>
+    <Method Name="AppendLine" Id="{53e52492-2458-0924-3ed5-fcce932950cf}">
+      <Declaration><![CDATA[// Appends a new line (\r\n or $r$n) to string builder's contents.
+METHOD AppendLine : I_StringBuilder]]></Declaration>
+    </Method>
+    <Method Name="BTrim" Id="{6336462a-d3b6-0afc-0b5f-f03088508027}">
+      <Declaration><![CDATA[// Removes all ASCII white space (spaces, tabs, carriage returns, and linefeeds) from the beginning and end of string in the string builder
+METHOD BTrim : I_StringBuilder]]></Declaration>
+    </Method>
+    <Property Name="Capacity" Id="{bcf2066e-c565-03b0-3be5-2a5a6a53beb5}">
+      <Declaration><![CDATA[// Number of bytes allocated in memory for the string builder's contents.
+PROPERTY Capacity : T_Size]]></Declaration>
+      <Get Name="Get" Id="{8df4528d-8dfd-051c-0d2b-c7a63501fe9b}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Method Name="Clear" Id="{347d5c29-0721-0b03-0095-158c3a7cd355}">
+      <Declaration><![CDATA[// Empties the string builder's contents, resetting its length to zero.
+METHOD Clear : I_StringBuilder]]></Declaration>
+    </Method>
+    <Method Name="CopySubstringTo" Id="{4aed9013-9999-013f-0e59-e11c1757d389}">
+      <Declaration><![CDATA[// Copies a subset of characters in the string builder from specified position at specified length to a string
+METHOD CopySubstringTo : I_StringBuilder
+VAR_INPUT
+	Position, Length : T_Size;
+	Value : ANY;
+END_VAR]]></Declaration>
+    </Method>
+    <Method Name="CopyTo" Id="{4fef8a1c-e8ee-0b09-2b29-c0ce9ed582ce}">
+      <Declaration><![CDATA[// Copies contents of string builder to given string of any size
+METHOD CopyTo : I_StringBuilder
+VAR_INPUT
+	Value : ANY;
+END_VAR]]></Declaration>
+    </Method>
+    <Method Name="GetBuffer" Id="{65214337-d4cb-0564-364a-90206878a704}">
+      <Declaration><![CDATA[// !!!UNSAFE!!! DON'T FORGET TO RELEASE/DELETE FROM	MEMORY WHEN DONE!
+// | Get a copy of the internal string buffer at the size of the string length + 1.
+METHOD GetBuffer : I_StringBuilder
+VAR_IN_OUT
+	pBuffer : POINTER TO BYTE;
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="GetCapacity" Id="{7713f594-1016-0404-230b-147240142a91}">
+      <Declaration><![CDATA[// Retrieves the number of bytes allocated in memory for the string builder's contents.
+METHOD GetCapacity : I_StringBuilder
+VAR_OUTPUT
+	Capacity : T_Size;
+END_VAR]]></Declaration>
+    </Method>
+    <Method Name="GetChar" Id="{388ab3ca-0d0f-01b5-1359-8d89db1813cd}">
+      <Declaration><![CDATA[// Gets character at specified position in the string builder
+METHOD GetChar : T_Char
+VAR_INPUT
+	Position : T_Size;
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="GetLength" Id="{4badd90c-9a76-0ed0-3aac-c4cacb25a4ff}">
+      <Declaration><![CDATA[// Retrieves the current size of string builder contents
+METHOD GetLength : I_StringBuilder
+VAR_OUTPUT
+	Length : T_Size;
+END_VAR]]></Declaration>
+    </Method>
+    <Method Name="GetString" Id="{85d9dbb0-34b5-0867-3bc0-42bd6813c6f5}">
+      <Declaration><![CDATA[// Converts contents of string builder to string and returns them
+METHOD GetString : T_LongString
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="GetSubstring" Id="{8ce14fa3-ecaa-04eb-3e68-767b1754c46a}">
+      <Declaration><![CDATA[// Get a subset of characters in the string builder from specified position at specified length and returns them as a string
+METHOD GetSubstring : T_LongString
+VAR_INPUT
+	Position, Length : T_Size;
+END_VAR]]></Declaration>
+    </Method>
+    <Method Name="Insert" Id="{031bb51f-3f21-0fdc-3959-bf42005a2e62}">
+      <Declaration><![CDATA[// Inserts the given string at the specified position.
+METHOD Insert : I_StringBuilder
+VAR_INPUT
+	Position : T_Size;
+	sValue : T_LongString;
+END_VAR]]></Declaration>
+    </Method>
+    <Method Name="InsertAny" Id="{a3009579-1d1b-0e62-3e6e-55258f236a70}">
+      <Declaration><![CDATA[// Inserts the given value at the specified position.
+METHOD InsertAny : I_StringBuilder
+VAR_INPUT
+	Position : T_Size;
+	Value : ANY;
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="InsertBuffer" Id="{bc166a72-7528-0ef6-0a23-abc694ea21bf}">
+      <Declaration><![CDATA[// !!!UNSAFE!!! THIS WILL INSERT UP TO THE NULL CHARACTER. IF NO NULL EXISTS, THIS WILL RUN FOREVER!
+// | Inserts raw values directly to the internal string buffer at the specified position. This is meant for inserting dynamic strings to the string builder.
+METHOD InsertBuffer : I_StringBuilder
+VAR_INPUT
+	Position : T_Size;
+	pBuffer : POINTER TO BYTE;
+END_VAR]]></Declaration>
+    </Method>
+    <Method Name="Join" Id="{d67a3650-0de4-040d-0661-805c9b37274d}">
+      <Declaration><![CDATA[// Joins/Merges the string contents of the current string builder with that on the specified string builder at the specified position
+METHOD Join : I_StringBuilder
+VAR_INPUT
+	Position : T_Size;
+	ipString_Builder : I_StringBuilder;
+END_VAR]]></Declaration>
+    </Method>
+    <Property Name="Length" Id="{1119e5c2-662b-0e4f-31ea-ea7ef12e48cc}">
+      <Declaration><![CDATA[// Current size of string builder contents
+PROPERTY Length : T_Size]]></Declaration>
+      <Get Name="Get" Id="{3611a61b-5653-0fe2-3f0c-ece21d1f4a31}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Method Name="LTrim" Id="{59c5d52c-9e85-0d3a-0a26-e2a3adec947e}">
+      <Declaration><![CDATA[// Removes all ASCII white space (spaces, tabs, carriage returns, and linefeeds) from the beginning of string in the string builder
+METHOD LTrim : I_StringBuilder
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="Remove" Id="{87f2d8c6-6af2-0f5b-2b93-7c9a82d2b216}">
+      <Declaration><![CDATA[// Removes the characters in the string builder from specified position at specified length.
+METHOD Remove : I_StringBuilder
+VAR_INPUT
+	Position, Length : T_Size;
+END_VAR]]></Declaration>
+    </Method>
+    <Method Name="Replace" Id="{e139e41e-9c09-0f8d-2c12-e413188320df}">
+      <Declaration><![CDATA[// Replaces the instance of the old string in the string builder with the new string.
+// If bReplace_All = TRUE, all instances of the old string are placed, else only the first instance.
+METHOD Replace : I_StringBuilder
+VAR_INPUT
+	sOld_Value,
+	sNew_Value : T_LongString;
+	bReplace_All : BOOL;
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="ReplaceAny" Id="{4c121ccd-19c7-0c8f-1fc0-748e2ec904dc}">
+      <Declaration><![CDATA[// Replaces the instance of the old value in the string builder with the new value.
+// If bReplace_All = TRUE, all instances of the old value are placed, else only the first instance.
+METHOD ReplaceAny : I_StringBuilder
+VAR_INPUT
+	Old_Value : ANY;
+	New_Value : ANY;
+	bReplace_All : BOOL;
+END_VAR]]></Declaration>
+    </Method>
+    <Method Name="Reverse" Id="{dea71a16-e38b-098e-3932-763b07092e64}">
+      <Declaration><![CDATA[// Reverses the string contents in the string builder
+METHOD Reverse : I_StringBuilder
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="RTrim" Id="{1c8d76f3-da9e-0a8e-0287-1367825f2206}">
+      <Declaration><![CDATA[// Removes all ASCII white space (spaces, tabs, carriage returns, and linefeeds) from the end of string in the string builder
+METHOD RTrim : I_StringBuilder
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="Search" Id="{72899275-405d-0ae8-060e-08d2155ebf5c}">
+      <Declaration><![CDATA[// Finds the position of the first instance of a given string in the content's of the string builder from a starting position
+METHOD Search : I_StringBuilder
+VAR_INPUT
+	sValue : T_LongString;
+	Start_Position : T_Size;
+END_VAR
+VAR_OUTPUT
+	Position : T_Size;
+END_VAR]]></Declaration>
+    </Method>
+    <Method Name="SearchAny" Id="{14e97375-7886-0d63-2f83-211f8a66a2b4}">
+      <Declaration><![CDATA[// Finds the position of the first instance of a given value in the content's of the string builder from a starting position
+METHOD SearchAny : I_StringBuilder
+VAR_INPUT
+	Value : ANY;
+	Start_Position : T_Size;
+END_VAR
+VAR_OUTPUT
+	Position : T_Size;
+END_VAR]]></Declaration>
+    </Method>
+    <Method Name="Split" Id="{df7a7b2f-923a-0ba2-04c1-15af7e4365bd}">
+      <Declaration><![CDATA[// Appends selected characters from the current string builder to the selected string builder
+METHOD Split : I_StringBuilder
+VAR_INPUT
+	Position, Length : T_Size;
+	ipStringBuilder : I_StringBuilder;
+END_VAR]]></Declaration>
+    </Method>
+    <Method Name="StrinkToFit" Id="{01c3a71e-cae2-0469-1e6d-3561aa7466fe}">
+      <Declaration><![CDATA[// Reduces the capacity of the string builder to match the size of its contents, potentially reducing memory usage.
+METHOD StrinkToFit : I_StringBuilder]]></Declaration>
+    </Method>
+    <Method Name="ToLowercase" Id="{63cb74c6-82c4-03ee-3959-8a00b19071d2}">
+      <Declaration><![CDATA[// Converts all alphabetic characters in string builder to lowercase characters
+METHOD ToLowercase : I_StringBuilder
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="ToUppercase" Id="{1e62ca8a-728e-094d-0044-404331b9d613}">
+      <Declaration><![CDATA[// Converts all alphabetic characters in string builder to uppercase characters
+METHOD ToUppercase : I_StringBuilder
+VAR_INPUT
+END_VAR]]></Declaration>
+    </Method>
+  </Itf>
+</TcPlcObject>

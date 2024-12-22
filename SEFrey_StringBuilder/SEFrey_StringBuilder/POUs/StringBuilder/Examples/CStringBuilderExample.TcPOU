@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+  <POU Name="CStringBuilderExample" Id="{447b65b5-cd1a-4395-a4b5-8fe33216f0df}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK CStringBuilderExample
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	StringBuilder : CStringBuilder(maxBufferSize:=501); //500 characters + 0 terminator (/0)
+	bStart : BOOL;
+	bReset : BOOL;
+	sValue : STRING(255) := 'Dieser Text ist genau 250 Zeichen lang und wird verwendet, um zu zeigen, wie TwinCAT 3 Strings handhabt. Es handelt sich um einen langen Satz, der viele verschiedene Themen behandelt, wie z.B. Programmierung, Automatisierungstechnik, SPS-Programmieru';
+	currentString : STRING(550);
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF bStart THEN
+//	StringBuilder.Append(sValue:=sValue);
+	MEMCPY(destAddr:=ADR(currentString), srcAddr:=StringBuilder.Append(sValue:=sValue), n:=SIZEOF(currentString));
+	bStart:=FALSE;
+END_IF
+
+IF bReset THEN
+	MEMCPY(destAddr:=ADR(currentString), srcAddr:=StringBuilder.Reset(), n:=SIZEOF(currentString));
+	bReset:=FALSE;
+END_IF]]></ST>
+    </Implementation>
+    <LineIds Name="CStringBuilderExample">
+      <LineId Id="15" Count="8" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>
