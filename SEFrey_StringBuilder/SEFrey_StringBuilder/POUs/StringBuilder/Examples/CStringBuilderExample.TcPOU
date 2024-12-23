@@ -10,25 +10,62 @@ VAR
 	StringBuilder : CStringBuilder(maxBufferSize:=501); //500 characters + 0 terminator (/0)
 	bStart : BOOL;
 	bReset : BOOL;
-	sValue : STRING(255) := 'Dieser Text ist genau 250 Zeichen lang und wird verwendet, um zu zeigen, wie TwinCAT 3 Strings handhabt. Es handelt sich um einen langen Satz, der viele verschiedene Themen behandelt, wie z.B. Programmierung, Automatisierungstechnik, SPS-Programmieru';
+	Value : STRING(255) := 'Dieser Text ist genau 250 Zeichen lang und wird verwendet, um zu zeigen, wie TwinCAT 3 Strings handhabt. Es handelt sich um einen langen Satz, der viele verschiedene Themen behandelt, wie z.B. Programmierung, Automatisierungstechnik, SPS-Programmieru';
 	currentString : STRING(550);
+	
+    logTimer : TON := ( IN := TRUE, PT := T#500ms );
+	timeExample : DT := DT#2024-12-22-18:18:20;
+	pResult : POINTER TO BYTE;
+	Stage : INT;
 END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[IF bStart THEN
 //	StringBuilder.Append(sValue:=sValue);
-	MEMCPY(destAddr:=ADR(currentString), srcAddr:=StringBuilder.Append(sValue:=sValue), n:=SIZEOF(currentString));
+	MEMCPY(destAddr:=ADR(currentString), srcAddr:=StringBuilder.Append(Value:=Value).BufferAddress, n:=SIZEOF(currentString));
 	bStart:=FALSE;
 END_IF
 
 IF bReset THEN
-	MEMCPY(destAddr:=ADR(currentString), srcAddr:=StringBuilder.Reset(), n:=SIZEOF(currentString));
+	MEMCPY(destAddr:=ADR(currentString), srcAddr:=StringBuilder.Reset().BufferAddress, n:=SIZEOF(currentString));
 	bReset:=FALSE;
-END_IF]]></ST>
+END_IF
+
+
+
+CASE Stage OF
+	
+	0:
+		StringBuilder
+			.Append(Value:='Hello friend, this is a time: ')
+			.AppendAny(Value:=timeExample)
+			.Append(Value:=', and this is a bool added: ')
+			.AppendAny(Value:=bStart)
+			.Append(Value:=', that is awesome right?');
+		// show string data
+		MEMCPY(destAddr:=ADR(currentString), srcAddr:=StringBuilder.BufferAddress, n:=SIZEOF(currentString));
+		Stage := 1;
+		
+		// TODO: add multiple steps with showing the stringbuilder functionality
+
+END_CASE]]></ST>
     </Implementation>
     <LineIds Name="CStringBuilderExample">
       <LineId Id="15" Count="8" />
       <LineId Id="9" Count="0" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="37" Count="1" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="41" Count="0" />
+      <LineId Id="44" Count="0" />
+      <LineId Id="53" Count="0" />
+      <LineId Id="63" Count="3" />
+      <LineId Id="68" Count="1" />
+      <LineId Id="45" Count="0" />
+      <LineId Id="55" Count="0" />
+      <LineId Id="71" Count="1" />
+      <LineId Id="43" Count="0" />
+      <LineId Id="42" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

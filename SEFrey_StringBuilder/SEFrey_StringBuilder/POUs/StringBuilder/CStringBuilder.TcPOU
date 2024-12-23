@@ -1,7 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
   <POU Name="CStringBuilder" Id="{79373a45-1f4b-49ff-bd8a-456d74f0dd44}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK CStringBuilder
+    <Declaration><![CDATA[{attribute 'no_assign'}
+{attribute 'enable_dynamic_creation'}
+{attribute 'no_explicit_call' := 'do not call this POU directly'}
+FUNCTION_BLOCK CStringBuilder IMPLEMENTS I_StringBuilder
 VAR_INPUT
 END_VAR
 VAR_OUTPUT
@@ -15,30 +18,164 @@ END_VAR
     <Implementation>
       <ST><![CDATA[]]></ST>
     </Implementation>
-    <Method Name="Append" Id="{474915fc-a233-4555-a235-ca409caaa38d}">
-      <Declaration><![CDATA[METHOD Append : POINTER TO BYTE
+    <Method Name="AnyToString" Id="{5ead9a6d-2f38-4e44-8a90-6d0ccb4b52ed}">
+      <Declaration><![CDATA[METHOD AnyToString : STRING
 VAR_INPUT
-	sValue : T_MaxString;
+	Value : ANY;
+END_VAR
+VAR
+	pBool			: POINTER TO BOOL;
+    pByte			: POINTER TO BYTE;
+    pWord			: POINTER TO WORD;
+    pDWord			: POINTER TO DWORD;
+    pLWord			: POINTER TO LWORD;
+    pSint			: POINTER TO SINT;
+    pInt			: POINTER TO INT;
+    pDint			: POINTER TO DINT;
+    pLint			: POINTER TO LINT;
+    pUSint			: POINTER TO USINT;
+    pUInt			: POINTER TO UINT;
+    pUDint			: POINTER TO UDINT;
+    pULint			: POINTER TO ULINT;
+    pReal			: POINTER TO REAL;
+    pLReal			: POINTER TO LREAL;
+    pString			: POINTER TO T_MaxString;
+    pWString		: POINTER TO WSTRING;
+    pTime			: POINTER TO TIME;
+    pDate			: POINTER TO DATE;
+    pDateAndTime	: POINTER TO DATE_AND_TIME;
+    pTimeOfDay		: POINTER TO TIME_OF_DAY;
+    pPointer		: PVOID;
+	pLTime 			: POINTER TO LTIME;
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[Append := THIS^.AppendAny(sValue);]]></ST>
+        <ST><![CDATA[IF Value.pValue = 0 THEN RETURN; END_IF;
+
+CASE Value.TypeClass OF 
+	__SYSTEM.TYPE_CLASS.TYPE_BOOL:
+		pBool := Value.pValue;
+		AnyToString := TO_STRING(pBool^);
+		
+    __SYSTEM.TYPE_CLASS.TYPE_BYTE:
+		pByte := Value.pValue;
+		AnyToString := TO_STRING(pByte^);
+		
+    __SYSTEM.TYPE_CLASS.TYPE_WORD:
+		pWord := Value.pValue;
+		AnyToString := TO_STRING(pWord^);
+		
+    __SYSTEM.TYPE_CLASS.TYPE_DWORD:
+		pDWord := Value.pValue;
+		AnyToString := TO_STRING(pDWord^);
+		
+    __SYSTEM.TYPE_CLASS.TYPE_LWORD:
+		pLWord := Value.pValue;
+		AnyToString := TO_STRING(pLWord^);
+		
+    __SYSTEM.TYPE_CLASS.TYPE_SINT:
+		pSint := Value.pValue;
+		AnyToString := TO_STRING(pSint^);
+		
+    __SYSTEM.TYPE_CLASS.TYPE_INT:
+		pInt := Value.pValue;
+		AnyToString := TO_STRING(pInt^);
+		
+    __SYSTEM.TYPE_CLASS.TYPE_DINT:
+		pDint := Value.pValue;
+		AnyToString := TO_STRING(pDint^);
+		
+    __SYSTEM.TYPE_CLASS.TYPE_LINT:
+		pLint := Value.pValue;
+		AnyToString := TO_STRING(pLint^);
+		
+    __SYSTEM.TYPE_CLASS.TYPE_USINT:
+		pUSint := Value.pValue;
+		AnyToString := TO_STRING(pUSint^);
+		
+    __SYSTEM.TYPE_CLASS.TYPE_UINT:
+		pUInt := Value.pValue;
+		AnyToString := TO_STRING(pUInt^);
+		
+    __SYSTEM.TYPE_CLASS.TYPE_UDINT:
+		pUDint := Value.pValue;
+		AnyToString := TO_STRING(pUDint^);
+		
+    __SYSTEM.TYPE_CLASS.TYPE_ULINT:
+		pULint := Value.pValue;
+		AnyToString := TO_STRING(pULint^);
+		
+   __SYSTEM.TYPE_CLASS.TYPE_REAL:
+		pReal := Value.pValue;
+		AnyToString := TO_STRING(pReal^);
+		
+    __SYSTEM.TYPE_CLASS.TYPE_LREAL:
+		pLReal := Value.pValue;
+		AnyToString := TO_STRING(pLReal^);
+		
+    __SYSTEM.TYPE_CLASS.TYPE_STRING:
+		pString := Value.pValue;
+		AnyToString := TO_STRING(pString^);
+		
+   __SYSTEM.TYPE_CLASS.TYPE_WSTRING:
+		pWString := Value.pValue;
+		AnyToString := TO_STRING(pWString^);
+		
+    __SYSTEM.TYPE_CLASS.TYPE_TIME:
+		pTime := Value.pValue;
+		AnyToString := TO_STRING(pTime^);
+		
+    __SYSTEM.TYPE_CLASS.TYPE_DATE:
+		pDate := Value.pValue;
+		AnyToString := TO_STRING(pDate^);
+		
+    __SYSTEM.TYPE_CLASS.TYPE_DATEANDTIME:
+		pDateAndTime := Value.pValue;
+		AnyToString := TO_STRING(pDateAndTime^);
+		
+    __SYSTEM.TYPE_CLASS.TYPE_TIMEOFDAY:
+		pTimeOfDay := Value.pValue;
+		AnyToString := TO_STRING(pTimeOfDay^);
+	
+	__SYSTEM.TYPE_CLASS.TYPE_POINTER:
+		AnyToString := TO_STRING(Value.pValue);
+		
+	__SYSTEM.TYPE_CLASS.TYPE_LTIME:
+		pLTime := Value.pValue;
+		AnyToString := TO_STRING(pLTime^);
+ELSE
+	RETURN; 
+END_CASE]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Append" Id="{474915fc-a233-4555-a235-ca409caaa38d}">
+      <Declaration><![CDATA[METHOD Append : I_StringBuilder
+VAR_INPUT
+	Value : T_MaxString;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[Append := THIS^.AppendAny(Value);]]></ST>
       </Implementation>
     </Method>
     <Method Name="AppendAny" Id="{bd1b6489-49b2-0096-26d8-3075aa66e4a8}">
       <Declaration><![CDATA[// Appends the given value to the end of the string builder's contents.
-METHOD AppendAny : POINTER TO BYTE
+METHOD AppendAny : I_StringBuilder
 VAR_INPUT
 	Value : ANY;
 END_VAR
 VAR
 	bMalloced : BOOL := TRUE;
 	stringLength : UDINT;
+	convertedAny : STRING; 
+	pValue : POINTER TO BYTE;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[CASE Value.TypeClass OF
+        <ST><![CDATA[AppendAny := THIS^;
+CASE Value.TypeClass OF
 	__SYSTEM.TYPE_CLASS.TYPE_STRING: 
-		stringLength := GetUsedStringLength(Value.pValue);//F_StrLen(Value.pValue);
+		pValue := Value.pValue;
+		//F_StrLen(Value.pValue);
 		
 //	__SYSTEM.TYPE_CLASS.TYPE_WSTRING:
 //		Str_Len := TO_DINT(Tc2_Utilities.WLEN2(Value.pValue));
@@ -66,12 +203,13 @@ END_VAR]]></Declaration>
 	__SYSTEM.TYPE_CLASS.TYPE_DATEANDTIME,
 	__SYSTEM.TYPE_CLASS.TYPE_TIMEOFDAY,
 	__SYSTEM.TYPE_CLASS.TYPE_POINTER:
-//		pValue := THIS^.Malloc(SIZEOF(T_LongString));
-//		pValue^ := F_AnyToString(Value);
-		stringLength := GetUsedStringLength(Value.pValue);//F_StrLen(pValue);
+		convertedAny := AnyToString(Value);
+		pValue := ADR(convertedAny);
 ELSE
 	RETURN;
 END_CASE
+
+stringLength := GetUsedStringLength(pByte:=pValue);
 
 //check available size, existing size
 IF stringLength = 0 THEN
@@ -81,13 +219,22 @@ END_IF
 IF THIS^._currentUsedBufferSize + stringLength >= THIS^._maxBufferSize THEN
 	RETURN;
 END_IF
-MEMCPY(destAddr:=(THIS^.pBuffer + THIS^._currentUsedBufferSize), srcAddr:=Value.pValue, n:=stringLength);
+MEMCPY(destAddr:=(THIS^.pBuffer + THIS^._currentUsedBufferSize), srcAddr:=pValue, n:=stringLength);
 
-THIS^._currentUsedBufferSize := THIS^._currentUsedBufferSize + stringLength;
-
-AppendAny := THIS^.pBuffer;]]></ST>
+THIS^._currentUsedBufferSize := THIS^._currentUsedBufferSize + stringLength;]]></ST>
       </Implementation>
     </Method>
+    <Property Name="BufferAddress" Id="{a5fb5549-c08a-4c47-8603-5eb042025092}">
+      <Declaration><![CDATA[PROPERTY BufferAddress : POINTER TO BYTE]]></Declaration>
+      <Get Name="Get" Id="{07c0f9ec-d4a4-48d3-adbc-6862f32f272f}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[BufferAddress := THIS^.pBuffer;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
     <Property Name="CurrentBufferSize" Id="{81e32561-fd56-4c8d-a3f6-4b792bb65c46}">
       <Declaration><![CDATA[PROPERTY CurrentBufferSize : UDINT]]></Declaration>
       <Get Name="Get" Id="{fd79a365-f513-441f-9fae-cf28cdbe0b18}">
@@ -147,37 +294,50 @@ END_VAR
       </Get>
     </Property>
     <Method Name="Reset" Id="{027044e4-4377-4c44-9597-421e0eeb6261}">
-      <Declaration><![CDATA[METHOD Reset : POINTER TO BYTE;
+      <Declaration><![CDATA[METHOD Reset : I_StringBuilder
 VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[IF THIS^.pBuffer = 0 THEN
+        <ST><![CDATA[Reset := THIS^;
+IF THIS^.pBuffer = 0 THEN
 	RETURN;
 END_IF
 
 MEMSET(destAddr:=THIS^.pBuffer, fillByte:=0, n:=THIS^.MaxBufferSize);
 
-Reset := THIS^.pBuffer;]]></ST>
+]]></ST>
       </Implementation>
     </Method>
     <LineIds Name="CStringBuilder">
       <LineId Id="9" Count="0" />
     </LineIds>
+    <LineIds Name="CStringBuilder.AnyToString">
+      <LineId Id="6" Count="94" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
     <LineIds Name="CStringBuilder.Append">
       <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="CStringBuilder.AppendAny">
-      <LineId Id="4" Count="2" />
-      <LineId Id="9" Count="32" />
+      <LineId Id="80" Count="0" />
+      <LineId Id="4" Count="1" />
+      <LineId Id="75" Count="0" />
+      <LineId Id="6" Count="0" />
+      <LineId Id="9" Count="26" />
+      <LineId Id="74" Count="0" />
+      <LineId Id="79" Count="0" />
+      <LineId Id="39" Count="2" />
+      <LineId Id="76" Count="1" />
       <LineId Id="59" Count="1" />
       <LineId Id="63" Count="0" />
       <LineId Id="67" Count="5" />
       <LineId Id="64" Count="0" />
       <LineId Id="62" Count="0" />
       <LineId Id="61" Count="0" />
-      <LineId Id="66" Count="0" />
-      <LineId Id="65" Count="0" />
+    </LineIds>
+    <LineIds Name="CStringBuilder.BufferAddress.Get">
+      <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="CStringBuilder.CurrentBufferSize.Get">
       <LineId Id="2" Count="0" />
@@ -198,6 +358,7 @@ Reset := THIS^.pBuffer;]]></ST>
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="CStringBuilder.Reset">
+      <LineId Id="12" Count="0" />
       <LineId Id="6" Count="3" />
       <LineId Id="5" Count="0" />
       <LineId Id="11" Count="0" />

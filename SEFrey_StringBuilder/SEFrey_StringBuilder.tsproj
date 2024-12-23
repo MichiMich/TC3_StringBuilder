@@ -10,7 +10,7 @@
 		</System>
 		<Plc>
 			<Project GUID="{6C4F04F4-0BC7-4CB5-8CD2-7AF36BD49F53}" Name="SEFrey_StringBuilder" PrjFilePath="SEFrey_StringBuilder\SEFrey_StringBuilder.plcproj" TmcFilePath="SEFrey_StringBuilder\SEFrey_StringBuilder.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{2E392066-BD02-B57F-0F84-3610C235C8B4}">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{A428425A-3D85-9218-A03B-DDA7ED731FD8}">
 					<Name>SEFrey_StringBuilder Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Contexts>
