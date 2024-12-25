@@ -7,65 +7,123 @@ END_VAR
 VAR_OUTPUT
 END_VAR
 VAR
-	StringBuilder : CStringBuilder(maxBufferSize:=501); //500 characters + 0 terminator (/0)
-	bStart : BOOL;
-	bReset : BOOL;
+	StringBuilder : CStringBuilder(maxBufferSize:=3000); //500 characters + 0 terminator (/0)
 	Value : STRING(255) := 'Dieser Text ist genau 250 Zeichen lang und wird verwendet, um zu zeigen, wie TwinCAT 3 Strings handhabt. Es handelt sich um einen langen Satz, der viele verschiedene Themen behandelt, wie z.B. Programmierung, Automatisierungstechnik, SPS-Programmieru';
-	currentString : STRING(550);
-	
-    logTimer : TON := ( IN := TRUE, PT := T#500ms );
-	timeExample : DT := DT#2024-12-22-18:18:20;
+	currentString : STRING(3000);
 	pResult : POINTER TO BYTE;
 	Stage : INT;
+	
+	 boolExample : BOOL := TRUE;
+    byteExample : BYTE := 16#FF;
+    wordExample : WORD := 16#FFFF;
+    dwordExample : DWORD := 16#FFFFFFFF;
+    lwordExample : LWORD := 16#FFFFFFFFFFFFFFFF;
+    sintExample : SINT := -128;
+    intExample : INT := -32768;
+    dintExample : DINT := -2147483648;
+    lintExample : LINT := -9223372036854775808;
+    usintExample : USINT := 255;
+    uintExample : UINT := 65535;
+    udintExample : UDINT := 4294967295;
+    ulintExample : ULINT := 18446744073709551615;
+    realExample : REAL := 1.0;
+    lrealExample : LREAL := 1.0;
+    timeExample : TIME := T#5s;
+    dateExample : DATE := D#2023-01-01;
+    todExample : TOD := TOD#12:00:00;
+    dtExample : DT := DT#2023-01-01-12:00:00;
+    stringExample : STRING := 'I am a string';
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[IF bStart THEN
-//	StringBuilder.Append(sValue:=sValue);
-	MEMCPY(destAddr:=ADR(currentString), srcAddr:=StringBuilder.Append(Value:=Value).BufferAddress, n:=SIZEOF(currentString));
-	bStart:=FALSE;
-END_IF
-
-IF bReset THEN
-	MEMCPY(destAddr:=ADR(currentString), srcAddr:=StringBuilder.Reset().BufferAddress, n:=SIZEOF(currentString));
-	bReset:=FALSE;
-END_IF
-
-
-
-CASE Stage OF
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="RunExample" Id="{9ca5d71e-b86e-4038-966d-0f5f3c1e1bc0}">
+      <Declaration><![CDATA[METHOD RunExample : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[CASE Stage OF
 	
 	0:
 		StringBuilder
-			.Append(Value:='Hello friend, this is a time: ')
-			.AppendAny(Value:=timeExample)
-			.Append(Value:=', and this is a bool added: ')
-			.AppendAny(Value:=bStart)
-			.Append(Value:=', that is awesome right?');
+            .Append(Value:='This is a bool: ')
+            .AppendAny(Value:=boolExample)
+            .Append(Value:=', This is a byte: ')
+            .AppendAny(Value:=byteExample)
+            .Append(Value:=', This is a word: ')
+            .AppendAny(Value:=wordExample)
+            .Append(Value:=', This is a dword: ')
+            .AppendAny(Value:=dwordExample)
+            .Append(Value:=', This is a lword: ')
+            .AppendAny(Value:=lwordExample)
+            .Append(Value:=', This is a sint: ')
+            .AppendAny(Value:=sintExample)
+            .Append(Value:=', This is an int: ')
+            .AppendAny(Value:=intExample);
+			
+			//separation done, compiling + logging in needs pretty long for chains longer than 14
+			StringBuilder
+			.Append(Value:=', This is a dint: ')
+            .AppendAny(Value:=dintExample)
+            .Append(Value:=', This is a lint: ')
+            .AppendAny(Value:=lintExample)
+            .Append(Value:=', This is a usint: ')
+            .AppendAny(Value:=usintExample)
+            .Append(Value:=', This is a uint: ')
+            .AppendAny(Value:=uintExample)
+            .Append(Value:=', This is a udint: ')
+            .AppendAny(Value:=udintExample)
+            .Append(Value:=', This is a ulint: ')
+            .AppendAny(Value:=ulintExample)
+            .Append(Value:=', This is a real: ')
+            .AppendAny(Value:=realExample);
+			
+			StringBuilder
+            .Append(Value:=', This is an lreal: ')
+            .AppendAny(Value:=lrealExample)
+            .Append(Value:=', This is a time: ')
+            .AppendAny(Value:=timeExample)
+            .Append(Value:=', This is a date: ')
+            .AppendAny(Value:=dateExample)
+            .Append(Value:=', This is a tod: ')
+            .AppendAny(Value:=todExample)
+            .Append(Value:=', This is a dt: ')
+            .AppendAny(Value:=dtExample)
+            .Append(Value:=', This is a string: ')
+            .AppendAny(Value:=stringExample);
 		// show string data
 		MEMCPY(destAddr:=ADR(currentString), srcAddr:=StringBuilder.BufferAddress, n:=SIZEOF(currentString));
 		Stage := 1;
 		
+		
 		// TODO: add multiple steps with showing the stringbuilder functionality
-
-END_CASE]]></ST>
-    </Implementation>
+END_CASE
+]]></ST>
+      </Implementation>
+    </Method>
     <LineIds Name="CStringBuilderExample">
-      <LineId Id="15" Count="8" />
-      <LineId Id="9" Count="0" />
-      <LineId Id="40" Count="0" />
-      <LineId Id="37" Count="1" />
-      <LineId Id="36" Count="0" />
-      <LineId Id="41" Count="0" />
-      <LineId Id="44" Count="0" />
-      <LineId Id="53" Count="0" />
-      <LineId Id="63" Count="3" />
-      <LineId Id="68" Count="1" />
-      <LineId Id="45" Count="0" />
-      <LineId Id="55" Count="0" />
-      <LineId Id="71" Count="1" />
-      <LineId Id="43" Count="0" />
       <LineId Id="42" Count="0" />
+    </LineIds>
+    <LineIds Name="CStringBuilderExample.RunExample">
+      <LineId Id="8" Count="2" />
+      <LineId Id="22" Count="1" />
+      <LineId Id="67" Count="11" />
+      <LineId Id="63" Count="0" />
+      <LineId Id="130" Count="1" />
+      <LineId Id="136" Count="0" />
+      <LineId Id="133" Count="2" />
+      <LineId Id="129" Count="0" />
+      <LineId Id="94" Count="9" />
+      <LineId Id="137" Count="1" />
+      <LineId Id="104" Count="11" />
+      <LineId Id="17" Count="2" />
+      <LineId Id="127" Count="0" />
+      <LineId Id="120" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="6" Count="0" />
+      <LineId Id="5" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>
