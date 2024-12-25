@@ -23,8 +23,8 @@ END_VAR
         <Declaration><![CDATA[]]></Declaration>
       </Get>
     </Property>
-    <Method Name="Reset" Id="{5bd9befe-3ca8-4ef3-a795-849de7551fbf}">
-      <Declaration><![CDATA[METHOD Reset : I_StringBuilder
+    <Method Name="Clear" Id="{5bd9befe-3ca8-4ef3-a795-849de7551fbf}">
+      <Declaration><![CDATA[METHOD Clear : I_StringBuilder
 VAR_INPUT
 END_VAR
 ]]></Declaration>

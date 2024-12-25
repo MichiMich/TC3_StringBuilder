@@ -165,22 +165,21 @@ VAR_INPUT
 	Value : ANY;
 END_VAR
 VAR
-	bMalloced : BOOL := TRUE;
 	stringLength : UDINT;
 	convertedAny : STRING; 
 	pValue : POINTER TO BYTE;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[AppendAny := THIS^;
+
+IF THIS^.pBuffer = 0 THEN
+	ADSLOGSTR(msgCtrlMask:= ADSLOG_MSGTYPE_ERROR, msgFmtStr:='Dynamic buffer null pointer, usage of StringBuilder not possible', '');
+	RETURN;
+END_IF
+
 CASE Value.TypeClass OF
 	__SYSTEM.TYPE_CLASS.TYPE_STRING: 
 		pValue := Value.pValue;
-		//F_StrLen(Value.pValue);
-		
-//	__SYSTEM.TYPE_CLASS.TYPE_WSTRING:
-//		Str_Len := TO_DINT(Tc2_Utilities.WLEN2(Value.pValue));
-//		pValue := THIS^.Malloc(Str_Len);
-//		Tc2_Utilities.WSTRING_TO_STRING2(pValue, Value.pValue, TO_UDINT(Str_Len));
 		
 	__SYSTEM.TYPE_CLASS.TYPE_BOOL,
 	__SYSTEM.TYPE_CLASS.TYPE_BYTE,
@@ -235,6 +234,22 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
+    <Method Name="Clear" Id="{027044e4-4377-4c44-9597-421e0eeb6261}">
+      <Declaration><![CDATA[METHOD Clear : I_StringBuilder
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[Clear := THIS^;
+IF THIS^.pBuffer = 0 THEN
+	RETURN;
+END_IF
+
+MEMSET(destAddr:=THIS^.pBuffer, fillByte:=0, n:=THIS^.MaxBufferSize);
+
+]]></ST>
+      </Implementation>
+    </Method>
     <Property Name="CurrentBufferSize" Id="{81e32561-fd56-4c8d-a3f6-4b792bb65c46}">
       <Declaration><![CDATA[PROPERTY CurrentBufferSize : UDINT]]></Declaration>
       <Get Name="Get" Id="{fd79a365-f513-441f-9fae-cf28cdbe0b18}">
@@ -246,20 +261,6 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
-    <Method Name="FB_init" Id="{4a26b5d9-82d1-4eb6-9e4f-48c0e834ad47}">
-      <Declaration><![CDATA[METHOD FB_init : BOOL
-VAR_INPUT
-	bInitRetains : BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
-	bInCopyCode : BOOL;  // if TRUE, the instance afterwards gets moved into the copy code (online change)
-	maxBufferSize : UDINT; //defines max possible string length
-END_VAR
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[// TODO: add logging for failed allocation
-THIS^.pBuffer := __NEW(BYTE, maxBufferSize);
-THIS^._maxBufferSize := maxBufferSize;]]></ST>
-      </Implementation>
-    </Method>
     <Method Name="GetUsedStringLength" Id="{d2916a93-b823-422f-aa12-59c615f2b767}">
       <Declaration><![CDATA[METHOD GetUsedStringLength : UDINT
 VAR_INPUT
@@ -282,6 +283,26 @@ END_WHILE;
 GetUsedStringLength := i;]]></ST>
       </Implementation>
     </Method>
+    <Method Name="Init" Id="{a6ff0c47-f3ea-4483-8981-c259eb39a22c}">
+      <Declaration><![CDATA[METHOD Init : I_StringBuilder
+VAR_INPUT
+	maxBufferSize : UDINT; //defines max possible string length
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// TODO: add logging for failed allocation
+IF maxBufferSize = 0 THEN
+	ADSLOGSTR(msgCtrlMask:= ADSLOG_MSGTYPE_ERROR, msgFmtStr:='BufferSize 0 given, Stringbuilder init failed', '');
+	RETURN;
+END_IF
+IF THIS^.pBuffer <> 0 THEN
+	__DELETE(THIS^.pBuffer);
+END_IF
+
+THIS^.pBuffer := __NEW(BYTE, maxBufferSize);
+THIS^._maxBufferSize := maxBufferSize;]]></ST>
+      </Implementation>
+    </Method>
     <Property Name="MaxBufferSize" Id="{cd6561ae-aca3-438b-a685-cbb63239aa56}">
       <Declaration><![CDATA[PROPERTY MaxBufferSize : UDINT]]></Declaration>
       <Get Name="Get" Id="{0d67c07e-bac9-47d4-9ccb-9b715c3a7fe9}">
@@ -293,18 +314,20 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
-    <Method Name="Reset" Id="{027044e4-4377-4c44-9597-421e0eeb6261}">
+    <Method Name="Reset" Id="{89de333b-4dc5-4a97-80a0-6f8c11f6e476}">
       <Declaration><![CDATA[METHOD Reset : I_StringBuilder
 VAR_INPUT
+	newMaxBufferSIze : UDINT;
 END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[Reset := THIS^;
-IF THIS^.pBuffer = 0 THEN
+Clear();
+IF newMaxBufferSIze = 0 THEN
 	RETURN;
 END_IF
 
-MEMSET(destAddr:=THIS^.pBuffer, fillByte:=0, n:=THIS^.MaxBufferSize);
+Init(maxBufferSize:=newMaxBufferSIze);
 
 ]]></ST>
       </Implementation>
@@ -321,10 +344,13 @@ MEMSET(destAddr:=THIS^.pBuffer, fillByte:=0, n:=THIS^.MaxBufferSize);
     </LineIds>
     <LineIds Name="CStringBuilder.AppendAny">
       <LineId Id="80" Count="0" />
+      <LineId Id="92" Count="1" />
+      <LineId Id="96" Count="0" />
+      <LineId Id="94" Count="1" />
+      <LineId Id="91" Count="0" />
       <LineId Id="4" Count="1" />
       <LineId Id="75" Count="0" />
-      <LineId Id="6" Count="0" />
-      <LineId Id="9" Count="26" />
+      <LineId Id="14" Count="21" />
       <LineId Id="74" Count="0" />
       <LineId Id="79" Count="0" />
       <LineId Id="39" Count="2" />
@@ -339,13 +365,15 @@ MEMSET(destAddr:=THIS^.pBuffer, fillByte:=0, n:=THIS^.MaxBufferSize);
     <LineIds Name="CStringBuilder.BufferAddress.Get">
       <LineId Id="2" Count="0" />
     </LineIds>
+    <LineIds Name="CStringBuilder.Clear">
+      <LineId Id="12" Count="0" />
+      <LineId Id="6" Count="3" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="10" Count="0" />
+    </LineIds>
     <LineIds Name="CStringBuilder.CurrentBufferSize.Get">
       <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="CStringBuilder.FB_init">
-      <LineId Id="10" Count="0" />
-      <LineId Id="7" Count="0" />
-      <LineId Id="9" Count="0" />
     </LineIds>
     <LineIds Name="CStringBuilder.GetUsedStringLength">
       <LineId Id="5" Count="0" />
@@ -354,15 +382,30 @@ MEMSET(destAddr:=THIS^.pBuffer, fillByte:=0, n:=THIS^.MaxBufferSize);
       <LineId Id="18" Count="4" />
       <LineId Id="6" Count="0" />
     </LineIds>
+    <LineIds Name="CStringBuilder.Init">
+      <LineId Id="12" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="10" Count="1" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
     <LineIds Name="CStringBuilder.MaxBufferSize.Get">
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="CStringBuilder.Reset">
-      <LineId Id="12" Count="0" />
-      <LineId Id="6" Count="3" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="9" Count="0" />
       <LineId Id="5" Count="0" />
-      <LineId Id="11" Count="0" />
+      <LineId Id="7" Count="1" />
+      <LineId Id="14" Count="0" />
       <LineId Id="10" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="12" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>
