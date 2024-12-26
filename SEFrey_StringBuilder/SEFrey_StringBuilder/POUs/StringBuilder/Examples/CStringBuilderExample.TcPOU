@@ -13,7 +13,9 @@ VAR
 	pResult : POINTER TO BYTE;
 	Stage : INT;
 	
-	 boolExample : BOOL := TRUE;
+	stStringBuilderPara : ST_StringBuilderPara := (MaxBufferSize:=3000);
+	
+ 	boolExample : BOOL := TRUE;
     byteExample : BYTE := 16#FF;
     wordExample : WORD := 16#FFFF;
     dwordExample : DWORD := 16#FFFFFFFF;
@@ -48,7 +50,9 @@ END_VAR
 	
 	0:
 		//initialization
-		StringBuilder.Init(maxBufferSize:=3000);
+//		StringBuilder.Init(pPara:=ADR(THIS^.stStringBuilderPara));
+		StringBUilder.Init(pPara:=ADR(THIS^.stStringBuilderPara));
+		
 		Stage := 1;
 		
 	1:
@@ -113,6 +117,8 @@ END_CASE
     <LineIds Name="CStringBuilderExample.RunExample">
       <LineId Id="8" Count="2" />
       <LineId Id="139" Count="1" />
+      <LineId Id="145" Count="0" />
+      <LineId Id="147" Count="0" />
       <LineId Id="143" Count="0" />
       <LineId Id="141" Count="0" />
       <LineId Id="144" Count="0" />

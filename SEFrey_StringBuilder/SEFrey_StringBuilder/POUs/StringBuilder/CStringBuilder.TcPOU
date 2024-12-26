@@ -4,6 +4,7 @@
     <Declaration><![CDATA[{attribute 'no_assign'}
 {attribute 'enable_dynamic_creation'}
 {attribute 'no_explicit_call' := 'do not call this POU directly'}
+{attribute 'reflection'} 
 FUNCTION_BLOCK CStringBuilder IMPLEMENTS I_StringBuilder
 VAR_INPUT
 END_VAR
@@ -13,6 +14,10 @@ VAR
 	pBuffer : POINTER TO BYTE;
 	_maxBufferSize : UDINT; //defines max possible string length
 	_currentUsedBufferSize : UDINT;
+	
+	{attribute 'instance-path'} 
+    {attribute 'noinit'} 
+    sPath : STRING; 
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -286,21 +291,21 @@ GetUsedStringLength := i;]]></ST>
     <Method Name="Init" Id="{a6ff0c47-f3ea-4483-8981-c259eb39a22c}">
       <Declaration><![CDATA[METHOD Init : I_StringBuilder
 VAR_INPUT
-	maxBufferSize : UDINT; //defines max possible string length
+	pPara : POINTER TO ST_StringBuilderPara;
 END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[// TODO: add logging for failed allocation
-IF maxBufferSize = 0 THEN
-	ADSLOGSTR(msgCtrlMask:= ADSLOG_MSGTYPE_ERROR, msgFmtStr:='BufferSize 0 given, Stringbuilder init failed', '');
+IF ParaErrors(pPara:=pPara) THEN
 	RETURN;
 END_IF
+
 IF THIS^.pBuffer <> 0 THEN
 	__DELETE(THIS^.pBuffer);
 END_IF
 
-THIS^.pBuffer := __NEW(BYTE, maxBufferSize);
-THIS^._maxBufferSize := maxBufferSize;]]></ST>
+THIS^.pBuffer := __NEW(BYTE, pPara^.MaxBufferSize);
+THIS^._maxBufferSize := pPara^.MaxBufferSize;]]></ST>
       </Implementation>
     </Method>
     <Property Name="MaxBufferSize" Id="{cd6561ae-aca3-438b-a685-cbb63239aa56}">
@@ -314,20 +319,48 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
+    <Method Name="ParaErrors" Id="{17c190cc-4470-4fb6-af3d-cbed72e8f47a}">
+      <Declaration><![CDATA[{attribute 'reflection'} 
+METHOD PRIVATE ParaErrors : BOOL
+VAR_INPUT
+	pPara : POINTER TO ST_StringBuilderPara;
+END_VAR
+VAR
+	s1 : STRING(35) := 'Invalid parametrization pointer at ';
+	s2: T_MaxString;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF pPara = 0 THEN
+	CONCAT2(pSrcString1:=ADR(s1), pSrcString2:=ADR(THIS^.sPath), pDstString:=ADR(s2), nDstSize:=SIZEOF(s2));
+	ADSLOGSTR(msgCtrlMask:= ADSLOG_MSGTYPE_ERROR, msgFmtStr:=s2, '');
+	ParaErrors := TRUE;
+	RETURN;
+END_IF
+IF pPara^.MaxBufferSize = 0 THEN
+	s1 := 'BufferSize 0 given, Stringbuilder init failed at ';
+	CONCAT2(pSrcString1:=ADR(s1), pSrcString2:=ADR(THIS^.sPath), pDstString:=ADR(s2), nDstSize:=SIZEOF(s2));
+	ADSLOGSTR(msgCtrlMask:= ADSLOG_MSGTYPE_ERROR, msgFmtStr:=s2, '');
+	ParaErrors := TRUE;
+	RETURN;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="Reset" Id="{89de333b-4dc5-4a97-80a0-6f8c11f6e476}">
       <Declaration><![CDATA[METHOD Reset : I_StringBuilder
 VAR_INPUT
-	newMaxBufferSIze : UDINT;
+	pPara : POINTER TO ST_StringBuilderPara;
 END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[Reset := THIS^;
 Clear();
-IF newMaxBufferSIze = 0 THEN
+
+IF ParaErrors(pPara:=pPara) THEN
 	RETURN;
 END_IF
 
-Init(maxBufferSize:=newMaxBufferSIze);
+Init(pPara:=pPara);
 
 ]]></ST>
       </Implementation>
@@ -384,9 +417,7 @@ Init(maxBufferSize:=newMaxBufferSIze);
     </LineIds>
     <LineIds Name="CStringBuilder.Init">
       <LineId Id="12" Count="0" />
-      <LineId Id="9" Count="0" />
-      <LineId Id="13" Count="0" />
-      <LineId Id="10" Count="1" />
+      <LineId Id="24" Count="3" />
       <LineId Id="16" Count="0" />
       <LineId Id="18" Count="0" />
       <LineId Id="15" Count="0" />
@@ -397,11 +428,24 @@ Init(maxBufferSize:=newMaxBufferSIze);
     <LineIds Name="CStringBuilder.MaxBufferSize.Get">
       <LineId Id="2" Count="0" />
     </LineIds>
+    <LineIds Name="CStringBuilder.ParaErrors">
+      <LineId Id="11" Count="0" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="21" Count="1" />
+      <LineId Id="13" Count="1" />
+      <LineId Id="37" Count="0" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
     <LineIds Name="CStringBuilder.Reset">
       <LineId Id="15" Count="0" />
       <LineId Id="9" Count="0" />
-      <LineId Id="5" Count="0" />
-      <LineId Id="7" Count="1" />
+      <LineId Id="17" Count="1" />
+      <LineId Id="20" Count="1" />
       <LineId Id="14" Count="0" />
       <LineId Id="10" Count="0" />
       <LineId Id="13" Count="0" />

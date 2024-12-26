@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+  <DUT Name="ST_StringBuilderPara" Id="{f454d59c-a733-4045-a675-ac7656813111}">
+    <Declaration><![CDATA[TYPE ST_StringBuilderPara :
+STRUCT
+	MaxBufferSize : UDINT; //defines max possible string length
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>
