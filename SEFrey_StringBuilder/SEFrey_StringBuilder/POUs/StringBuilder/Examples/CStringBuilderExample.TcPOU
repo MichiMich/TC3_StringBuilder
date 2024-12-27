@@ -7,11 +7,18 @@ END_VAR
 VAR_OUTPUT
 END_VAR
 VAR
+	//run tests
+	startClassAndInitializationTest, startSimpleUseTest : BOOL;
+
+	
+	simpleUseOutput1, simpleUseOutput2 : STRING(200);
+
+	
 	StringBuilder : CStringBuilder; //500 characters + 0 terminator (/0)
 	Value : STRING(255) := 'Dieser Text ist genau 250 Zeichen lang und wird verwendet, um zu zeigen, wie TwinCAT 3 Strings handhabt. Es handelt sich um einen langen Satz, der viele verschiedene Themen behandelt, wie z.B. Programmierung, Automatisierungstechnik, SPS-Programmieru';
-	currentString : STRING(3000);
+	currentString:  STRING(3000);
 	pResult : POINTER TO BYTE;
-	Stage : INT;
+	Stage, SimpleUseStage : INT;
 	
 	stStringBuilderPara : ST_StringBuilderPara := (MaxBufferSize:=3000);
 	
@@ -40,8 +47,8 @@ END_VAR
     <Implementation>
       <ST><![CDATA[]]></ST>
     </Implementation>
-    <Method Name="RunExample" Id="{9ca5d71e-b86e-4038-966d-0f5f3c1e1bc0}">
-      <Declaration><![CDATA[METHOD RunExample : BOOL
+    <Method Name="ClassAndInitialization" Id="{9ca5d71e-b86e-4038-966d-0f5f3c1e1bc0}">
+      <Declaration><![CDATA[METHOD ClassAndInitialization : BOOL
 VAR_INPUT
 END_VAR
 ]]></Declaration>
@@ -49,11 +56,11 @@ END_VAR
         <ST><![CDATA[CASE Stage OF
 	
 	0:
-		//initialization
-//		StringBuilder.Init(pPara:=ADR(THIS^.stStringBuilderPara));
-		StringBUilder.Init(pPara:=ADR(THIS^.stStringBuilderPara));
-		
-		Stage := 1;
+		IF startClassAndInitializationTest THEN
+			startClassAndInitializationTest := FALSE;
+			StringBUilder.Init(pPara:=ADR(THIS^.stStringBuilderPara));
+			Stage := 1;
+		END_IF
 		
 	1:
 		StringBuilder
@@ -103,23 +110,65 @@ END_VAR
             .Append(Value:=', This is a string: ')
             .AppendAny(Value:=stringExample);
 		// show string data
-		MEMCPY(destAddr:=ADR(currentString), srcAddr:=StringBuilder.BufferAddress, n:=SIZEOF(currentString));
+		StringBuilder.Copy(pDest:=ADR(currentString), n:=SIZEOF(currentString));
 		Stage := 2;
+		
+		2:
+			StringBuilder.Clear();
+			Stage := 0;
 		
 		
 END_CASE
 ]]></ST>
       </Implementation>
     </Method>
+    <Method Name="SimpleUse" Id="{f437f28c-d69e-49c0-8953-8b8986bbba39}">
+      <Declaration><![CDATA[METHOD SimpleUse : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// build string, copy to destination
+
+CASE SimpleUseStage OF
+
+
+	0:
+		IF THIS^.startSimpleUseTest THEN
+			startSimpleUseTest := FALSE;
+			//build string, copy to given destination
+			BuildString(nSizeDest:=SIZEOF(simpleUseOutput1))
+			.AppendAny(boolExample)
+			.AppendAny(dintExample)
+			.Copy(pDest:=ADR(simpleUseOutput1), n:=SIZEOF(simpleUseOutput1));
+			SimpleUseStage := 1;
+		END_IF
+		
+	1: //clear buffer, fill + copy to next string
+		BuildString(nSizeDest:=SIZEOF(simpleUseOutput2))
+		.Clear()
+		.AppendAny(dwordExample)
+		.AppendAny(dtExample)
+		.AppendAny(stringExample)
+		.Copy(pDest:=ADR(simpleUseOutput2), n:=SIZEOF(simpleUseOutput2));
+		SimpleUseStage := 0;
+	
+	
+	
+	
+END_CASE]]></ST>
+      </Implementation>
+    </Method>
     <LineIds Name="CStringBuilderExample">
       <LineId Id="42" Count="0" />
     </LineIds>
-    <LineIds Name="CStringBuilderExample.RunExample">
+    <LineIds Name="CStringBuilderExample.ClassAndInitialization">
       <LineId Id="8" Count="2" />
-      <LineId Id="139" Count="1" />
+      <LineId Id="139" Count="0" />
+      <LineId Id="155" Count="0" />
       <LineId Id="145" Count="0" />
-      <LineId Id="147" Count="0" />
       <LineId Id="143" Count="0" />
+      <LineId Id="154" Count="0" />
       <LineId Id="141" Count="0" />
       <LineId Id="144" Count="0" />
       <LineId Id="22" Count="1" />
@@ -132,11 +181,35 @@ END_CASE
       <LineId Id="94" Count="9" />
       <LineId Id="137" Count="1" />
       <LineId Id="104" Count="11" />
-      <LineId Id="17" Count="2" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="156" Count="0" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="157" Count="3" />
       <LineId Id="127" Count="0" />
       <LineId Id="120" Count="0" />
       <LineId Id="6" Count="0" />
       <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="CStringBuilderExample.SimpleUse">
+      <LineId Id="11" Count="2" />
+      <LineId Id="20" Count="1" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="30" Count="1" />
+      <LineId Id="6" Count="0" />
+      <LineId Id="8" Count="2" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="23" Count="1" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="27" Count="1" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="29" Count="0" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="17" Count="2" />
+      <LineId Id="16" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

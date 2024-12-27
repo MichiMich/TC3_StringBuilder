@@ -29,5 +29,13 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
     </Method>
+    <Method Name="Copy" Id="{5ca77160-9893-44ac-8bf9-5ee96c361c7d}">
+      <Declaration><![CDATA[METHOD Copy : BOOL
+VAR_INPUT
+	pDest : POINTER TO BYTE;
+	n : UDINT; // Size of destination
+END_VAR
+]]></Declaration>
+    </Method>
   </Itf>
 </TcPlcObject>

@@ -251,8 +251,21 @@ IF THIS^.pBuffer = 0 THEN
 END_IF
 
 MEMSET(destAddr:=THIS^.pBuffer, fillByte:=0, n:=THIS^.MaxBufferSize);
+_currentUsedBufferSize := 0;
 
 ]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Copy" Id="{f3bdf3b2-0ff0-4474-8b47-1ef85afdb62f}">
+      <Declaration><![CDATA[METHOD Copy : BOOL
+VAR_INPUT
+	pDest : POINTER TO BYTE;
+	n : UDINT; // Size of destination
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[MEMCPY(destAddr:=pDest, srcAddr:=THIS^.BufferAddress, n:=n);
+Copy := TRUE;]]></ST>
       </Implementation>
     </Method>
     <Property Name="CurrentBufferSize" Id="{81e32561-fd56-4c8d-a3f6-4b792bb65c46}">
@@ -402,8 +415,13 @@ Init(pPara:=pPara);
       <LineId Id="12" Count="0" />
       <LineId Id="6" Count="3" />
       <LineId Id="5" Count="0" />
+      <LineId Id="16" Count="0" />
       <LineId Id="11" Count="0" />
       <LineId Id="10" Count="0" />
+    </LineIds>
+    <LineIds Name="CStringBuilder.Copy">
+      <LineId Id="5" Count="0" />
+      <LineId Id="11" Count="0" />
     </LineIds>
     <LineIds Name="CStringBuilder.CurrentBufferSize.Get">
       <LineId Id="2" Count="0" />

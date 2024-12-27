@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+  <POU Name="BuildString" Id="{7fdda044-a55b-476d-bf32-bb4c822b6b15}" SpecialFunc="None">
+    <Declaration><![CDATA[//simple function use without insantiation
+FUNCTION BuildString : I_StringBuilder
+VAR_INPUT
+	nSizeDest : UDINT;
+END_VAR
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF nSizeDest = 0 THEN
+	RETURN;
+END_IF
+
+//Create if nonExistend
+IF GVL_StringBuilder.pStringBuilder = 0 THEN
+	GVL_StringBuilder.pStringBuilder := __NEW(CStringbuilder);
+END_IF
+
+// TODO: zero interface return
+IF GVL_StringBuilder.pStringBuilder = 0 THEN
+	ADSLOGSTR(msgCtrlMask:= ADSLOG_MSGTYPE_ERROR, msgFmtStr:='StringBuilder creation for GVL_StringBuilder failed', '');
+	RETURN;
+END_IF
+
+IF GVL_StringBuilder.pPara = 0 THEN
+	GVL_StringBuilder.pPara := __NEW(ST_StringBuilderPara);
+END_IF
+
+// TODO: zero interface return
+IF GVL_StringBuilder.pPara = 0 THEN
+	ADSLOGSTR(msgCtrlMask:= ADSLOG_MSGTYPE_ERROR, msgFmtStr:='ST_Para for GVL_StringBuilder failed', '');
+	RETURN;
+END_IF
+
+GVL_StringBuilder.pPara^.MaxBufferSize := nSizeDest;
+
+// adapt needed bufferSize
+IF nSizeDest > GVL_StringBuilder.pStringBuilder^.MaxBufferSize THEN
+	GVL_StringBuilder.pStringBuilder^.Reset(pPara:=GVL_StringBuilder.pPara);
+END_IF
+
+
+BuildString := GVL_StringBuilder.pStringBuilder^;
+]]></ST>
+    </Implementation>
+    <LineIds Name="BuildString">
+      <LineId Id="78" Count="33" />
+      <LineId Id="61" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

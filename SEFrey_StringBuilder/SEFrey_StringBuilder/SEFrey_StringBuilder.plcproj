@@ -16,10 +16,20 @@
     <Implicit_KindOfTask>{1cec1b45-30c9-466a-a99d-c48fdf3b11e7}</Implicit_KindOfTask>
     <Implicit_Jitter_Distribution>{abccf363-3a0d-4bfa-964e-18a1963e4e25}</Implicit_Jitter_Distribution>
     <LibraryReferences>{f8dfdd47-6042-44c9-8c08-65c9baf073a1}</LibraryReferences>
+    <Company>S.E.Frey</Company>
+    <Released>false</Released>
+    <Title>StringBuilder</Title>
+    <ProjectVersion>0.01</ProjectVersion>
+    <Author>Michi</Author>
+    <Description>Simple but powerfull stringbuilder, working with any in TC3 available datatype</Description>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="DUTs\ST_StringBuilderPara.TcDUT">
       <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="GVLs\GVL_StringBuilder.TcGVL">
+      <SubType>Code</SubType>
+      <LinkAlways>true</LinkAlways>
     </Compile>
     <Compile Include="PlcTask.TcTTO">
       <SubType>Code</SubType>
@@ -33,7 +43,7 @@
     <Compile Include="POUs\StringBuilder\Examples\CStringBuilderExample.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\StringBuilder\Functions\F_AnyToString.TcPOU">
+    <Compile Include="POUs\StringBuilder\Functions\BuildString.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\StringBuilder\Interfaces\I_StringBuilder.TcIO">
@@ -87,6 +97,33 @@
     </PlaceholderReference>
     <PlaceholderReference Include="Tc2_Utilities">
       <DefaultResolution>Tc2_Utilities, * (Beckhoff Automation GmbH)</DefaultResolution>
+      <Namespace>Tc2_Utilities</Namespace>
+      <Parameters>
+        <Parameter ListName="PARAMETERLIST" xmlns="">
+          <Key>NMAXLICENSES</Key>
+          <Value>50</Value>
+        </Parameter>
+        <Parameter ListName="PARAMETERLIST" xmlns="">
+          <Key>NMAXLICENSEDEVICES</Key>
+          <Value>16</Value>
+        </Parameter>
+        <Parameter ListName="PARAMETERLIST" xmlns="">
+          <Key>NMAXCPUCOUNT</Key>
+          <Value>64</Value>
+        </Parameter>
+        <Parameter ListName="PARAMETERLIST" xmlns="">
+          <Key>CMAXCHARACTERS</Key>
+          <Value>16#FFFFFFF0</Value>
+        </Parameter>
+        <Parameter ListName="PARAMETERLIST" xmlns="">
+          <Key>NMAXFILESONDONGLE</Key>
+          <Value>20</Value>
+        </Parameter>
+        <Parameter ListName="PARAMETERLIST" xmlns="">
+          <Key>CMAXCSVFIELDVALUESIZE</Key>
+          <Value>255</Value>
+        </Parameter>
+      </Parameters>
     </PlaceholderReference>
     <PlaceholderReference Include="Tc3_Module">
       <DefaultResolution>Tc3_Module, * (Beckhoff Automation GmbH)</DefaultResolution>
