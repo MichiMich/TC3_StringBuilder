@@ -14,7 +14,7 @@ VAR
 	simpleUseOutput1, simpleUseOutput2 : STRING(200);
 
 	
-	StringBuilder : CStringBuilder; //500 characters + 0 terminator (/0)
+	StringBuilder : CStringBuilder; 
 	Value : STRING(255) := 'Dieser Text ist genau 250 Zeichen lang und wird verwendet, um zu zeigen, wie TwinCAT 3 Strings handhabt. Es handelt sich um einen langen Satz, der viele verschiedene Themen behandelt, wie z.B. Programmierung, Automatisierungstechnik, SPS-Programmieru';
 	currentString:  STRING(3000);
 	pResult : POINTER TO BYTE;
@@ -58,7 +58,7 @@ END_VAR
 	0:
 		IF startClassAndInitializationTest THEN
 			startClassAndInitializationTest := FALSE;
-			StringBUilder.Init(pPara:=ADR(THIS^.stStringBuilderPara));
+			StringBuilder.Init(pPara:=ADR(THIS^.stStringBuilderPara));
 			Stage := 1;
 		END_IF
 		

@@ -12,7 +12,7 @@ var j = "1.2345";
 Console.WriteLine($"This is a string: {stringTest}, this is an integer: {i}, this is a float: {j}");
 ```
 
-- Avoids Global Variables and Constants: Instead of relying on global variables or constants for parametrization, this StringBuilder allows for dynamic buffer size configuration through the Init method:
+- Avoids Global Variables and Constants for config: Instead of relying on global variables or constants for parametrization, this StringBuilder allows for dynamic buffer size configuration through the Init method:
 
 ```st
 StringBuilder.Init(maxBufferSize:=3000);
@@ -25,6 +25,34 @@ StringBuilder.Init(maxBufferSize:=3000);
 - Method Chaining: You can chain methods to append various data types easily:
 
 ```st
+StringBuilder
+    .Append(Value:='This is a bool: ')
+    .AppendAny(Value:=boolExample)
+    .Copy(pDest:=ADR(simpleUseOutput2), n:=SIZEOF(simpleUseOutput2));
+```
+
+### Without instantiation
+
+Simple function call, which creates an instance at GVL_StringBuilder. This avoids having multiple instantiations of this class in one project.
+
+```st
+BuildString(nSizeDest:=SIZEOF(simpleUseOutput1))
+			.AppendAny(boolExample)
+			.AppendAny(dintExample)
+			.Copy(pDest:=ADR(simpleUseOutput1), n:=SIZEOF(simpleUseOutput1));
+```
+
+### With instantiation
+
+```st
+
+StringBuilder : CStringBuilder;
+stStringBuilderPara : ST_StringBuilderPara := (MaxBufferSize:=3000);
+```
+
+```st
+StringBuilder.Init(pPara:=ADR(THIS^.stStringBuilderPara))
+
 StringBuilder
     .Append(Value:='This is a bool: ')
     .AppendAny(Value:=boolExample)
@@ -46,8 +74,8 @@ StringBuilder
 - Output: For testing or logging, you can write the result to a file or copy it to a temporary string:
 
 ```st
-// display string data
-MEMCPY(destAddr:=ADR(currentString), srcAddr:=StringBuilder.BufferAddress, n:=SIZEOF(currentString));
+// display string data by copying buffer to given string
+StringBuilder.Copy(pDest:=ADR(simpleUseOutput2), n:=SIZEOF(simpleUseOutput2));
 ```
 
 ### Example Output::
