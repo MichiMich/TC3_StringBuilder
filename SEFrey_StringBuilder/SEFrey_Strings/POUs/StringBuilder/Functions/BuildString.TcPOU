@@ -15,35 +15,35 @@ END_VAR
 END_IF
 
 //Create if nonExistend
-IF GVL_StringBuilder.pStringBuilder = 0 THEN
-	GVL_StringBuilder.pStringBuilder := __NEW(CStringbuilder);
+IF GVL_Strings.pStringBuilder = 0 THEN
+	GVL_Strings.pStringBuilder := __NEW(CStringbuilder);
 END_IF
 
 // TODO: zero interface return
-IF GVL_StringBuilder.pStringBuilder = 0 THEN
-	ADSLOGSTR(msgCtrlMask:= ADSLOG_MSGTYPE_ERROR, msgFmtStr:='StringBuilder creation for GVL_StringBuilder failed', '');
+IF GVL_Strings.pStringBuilder = 0 THEN
+	ADSLOGSTR(msgCtrlMask:= ADSLOG_MSGTYPE_ERROR, msgFmtStr:='StringBuilder creation for GVL_Strings failed', '');
 	RETURN;
 END_IF
 
-IF GVL_StringBuilder.pPara = 0 THEN
-	GVL_StringBuilder.pPara := __NEW(ST_StringBuilderPara);
+IF GVL_Strings.pPara = 0 THEN
+	GVL_Strings.pPara := __NEW(ST_StringBuilderPara);
 END_IF
 
 // TODO: zero interface return
-IF GVL_StringBuilder.pPara = 0 THEN
-	ADSLOGSTR(msgCtrlMask:= ADSLOG_MSGTYPE_ERROR, msgFmtStr:='ST_Para for GVL_StringBuilder failed', '');
+IF GVL_Strings.pPara = 0 THEN
+	ADSLOGSTR(msgCtrlMask:= ADSLOG_MSGTYPE_ERROR, msgFmtStr:='ST_Para for GVL_Strings failed', '');
 	RETURN;
 END_IF
 
-GVL_StringBuilder.pPara^.MaxBufferSize := nSizeDest;
+GVL_Strings.pPara^.MaxBufferSize := nSizeDest;
 
 // adapt needed bufferSize
-IF nSizeDest > GVL_StringBuilder.pStringBuilder^.MaxBufferSize THEN
-	GVL_StringBuilder.pStringBuilder^.Reset(pPara:=GVL_StringBuilder.pPara);
+IF nSizeDest > GVL_Strings.pStringBuilder^.MaxBufferSize THEN
+	GVL_Strings.pStringBuilder^.Reset(pPara:=GVL_Strings.pPara);
 END_IF
 
 
-BuildString := GVL_StringBuilder.pStringBuilder^;
+BuildString := GVL_Strings.pStringBuilder^;
 ]]></ST>
     </Implementation>
     <LineIds Name="BuildString">

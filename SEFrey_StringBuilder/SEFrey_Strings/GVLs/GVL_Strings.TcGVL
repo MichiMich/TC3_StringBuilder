@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
-  <GVL Name="GVL_StringBuilder" Id="{9f669102-8e8d-43d9-8303-ff688dff9c01}">
+  <GVL Name="GVL_Strings" Id="{9f669102-8e8d-43d9-8303-ff688dff9c01}">
     <Declaration><![CDATA[{attribute 'qualified_only'}
 VAR_GLOBAL
 	pStringBuilder : POINTER TO CStringBuilder;

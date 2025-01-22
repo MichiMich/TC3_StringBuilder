@@ -8,7 +8,7 @@
     <DownloadApplicationInfo>true</DownloadApplicationInfo>
     <WriteProductVersion>true</WriteProductVersion>
     <GenerateTpy>false</GenerateTpy>
-    <Name>SEFrey_StringBuilder</Name>
+    <Name>SEFrey_Strings</Name>
     <ProgramVersion>3.1.4024.0</ProgramVersion>
     <Application>{9a5b256d-161a-46b4-ad30-f87e972aebe3}</Application>
     <TypeSystem>{50866d0f-879b-42af-ae25-a8a21925cb03}</TypeSystem>
@@ -18,7 +18,7 @@
     <LibraryReferences>{f8dfdd47-6042-44c9-8c08-65c9baf073a1}</LibraryReferences>
     <Company>S.E.Frey</Company>
     <Released>false</Released>
-    <Title>StringBuilder</Title>
+    <Title>SEFrey_Strings</Title>
     <ProjectVersion>0.01</ProjectVersion>
     <Author>Michi</Author>
     <Description>Simple but powerfull stringbuilder, working with any in TC3 available datatype</Description>
@@ -27,11 +27,14 @@
     <Compile Include="DUTs\ST_StringBuilderPara.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="GVLs\GVL_StringBuilder.TcGVL">
+    <Compile Include="GVLs\GVL_Strings.TcGVL">
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
     </Compile>
     <Compile Include="PlcTask.TcTTO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\Functions\GetUsedStringLength.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\MAIN.TcPOU">
@@ -53,6 +56,7 @@
   <ItemGroup>
     <Folder Include="DUTs" />
     <Folder Include="GVLs" />
+    <Folder Include="POUs\Functions" />
     <Folder Include="POUs\StringBuilder" />
     <Folder Include="POUs\StringBuilder\Interfaces" />
     <Folder Include="POUs\StringBuilder\Examples" />
@@ -131,7 +135,7 @@
     </PlaceholderReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="SEFrey_StringBuilder.tmc">
+    <None Include="SEFrey_Strings.tmc">
       <SubType>Content</SubType>
     </None>
   </ItemGroup>

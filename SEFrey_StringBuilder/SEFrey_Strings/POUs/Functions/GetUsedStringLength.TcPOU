@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+  <POU Name="GetUsedStringLength" Id="{68254f53-56ca-44a3-98c9-c7dc875b6182}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION GetUsedStringLength : UDINT
+VAR_INPUT
+	pByte : POINTER TO BYTE; //use ADR(myString)
+END_VAR
+VAR
+    i : UDINT := 0;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[//every string in twincat is 0 terminated
+IF pByte = 0 THEN
+	RETURN;
+END_IF
+
+WHILE (pByte^ <> 0) DO
+    pByte := pByte + 1; // Pointer auf das nächste Byte verschieben
+    i := i + 1;
+END_WHILE;
+
+GetUsedStringLength := i;]]></ST>
+    </Implementation>
+    <LineIds Name="GetUsedStringLength">
+      <LineId Id="13" Count="9" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

@@ -339,7 +339,7 @@ VAR_INPUT
 	pPara : POINTER TO ST_StringBuilderPara;
 END_VAR
 VAR
-	s1 : STRING(35) := 'Invalid parametrization pointer at ';
+	s1 : STRING := 'Invalid parametrization pointer at ';
 	s2: T_MaxString;
 END_VAR
 ]]></Declaration>
