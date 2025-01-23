@@ -10,7 +10,7 @@
 		</System>
 		<Plc>
 			<Project GUID="{6C4F04F4-0BC7-4CB5-8CD2-7AF36BD49F53}" Name="SEFrey_Strings" PrjFilePath="SEFrey_Strings\SEFrey_Strings.plcproj" TmcFilePath="SEFrey_Strings\SEFrey_Strings.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="SEFrey_Strings\SEFrey_Strings.tmc" TmcHash="{EA263607-9C7A-C306-9BE1-5246F250ED07}">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="SEFrey_Strings\SEFrey_Strings.tmc" TmcHash="{49FA1A78-E025-7814-27A8-1FA0F2680C8E}">
 					<Name>SEFrey_Strings Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Contexts>

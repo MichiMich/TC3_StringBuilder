@@ -11,7 +11,7 @@ VAR
 	startClassAndInitializationTest, startSimpleUseTest : BOOL;
 
 	
-	simpleUseOutput1, simpleUseOutput2 : STRING(200);
+	simpleUseOutput1, simpleUseOutput2 : STRING(1000);
 
 	
 	StringBuilder : CStringBuilder; 
@@ -109,6 +109,19 @@ END_VAR
             .AppendAny(Value:=dtExample)
             .Append(Value:=', This is a string: ')
             .AppendAny(Value:=stringExample);
+			
+			// add string in json format
+			StringBuilder.Append('{"type":"')
+			.Append('Name')
+			.Append('","namespace":"')
+			.Append('NameSpace1')
+			.Append('","id":')
+			.Append('10')
+			.Append(',"count":')
+			.Append('22')
+			.Append(',"guid":"')
+			.Append('7777-7777-7777-7777')
+			.Append('"}');
 		// show string data
 		StringBuilder.Copy(pDest:=ADR(currentString), n:=SIZEOF(currentString));
 		Stage := 2;
@@ -181,6 +194,10 @@ END_CASE]]></ST>
       <LineId Id="94" Count="9" />
       <LineId Id="137" Count="1" />
       <LineId Id="104" Count="11" />
+      <LineId Id="164" Count="0" />
+      <LineId Id="176" Count="0" />
+      <LineId Id="166" Count="9" />
+      <LineId Id="165" Count="0" />
       <LineId Id="17" Count="0" />
       <LineId Id="156" Count="0" />
       <LineId Id="19" Count="0" />

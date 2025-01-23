@@ -220,7 +220,12 @@ IF stringLength = 0 THEN
 	RETURN;
 END_IF
 //only copy if we do not exceed possible limit
-IF THIS^._currentUsedBufferSize + stringLength >= THIS^._maxBufferSize THEN
+IF THIS^._currentUsedBufferSize + stringLength >= THIS^._maxBufferSize THEN //>= because last byte needs to be 0 terminator and wont be touched here
+	ADSLOGSTR(
+		msgCtrlMask:=ADSLOG_MSGTYPE_ERROR,
+		msgFmtStr:='BufferSize overflow at %s, building string cancelled',
+		strArg:=THIS^.sPath
+		);
 	RETURN;
 END_IF
 MEMCPY(destAddr:=(THIS^.pBuffer + THIS^._currentUsedBufferSize), srcAddr:=pValue, n:=stringLength);
@@ -264,7 +269,7 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[MEMCPY(destAddr:=pDest, srcAddr:=THIS^.BufferAddress, n:=n);
+        <ST><![CDATA[MEMCPY(destAddr:=pDest, srcAddr:=THIS^.BufferAddress, n:=MIN(n,_maxBufferSize));
 Copy := TRUE;]]></ST>
       </Implementation>
     </Method>
@@ -403,7 +408,9 @@ Init(pPara:=pPara);
       <LineId Id="76" Count="1" />
       <LineId Id="59" Count="1" />
       <LineId Id="63" Count="0" />
-      <LineId Id="67" Count="5" />
+      <LineId Id="67" Count="3" />
+      <LineId Id="106" Count="4" />
+      <LineId Id="71" Count="1" />
       <LineId Id="64" Count="0" />
       <LineId Id="62" Count="0" />
       <LineId Id="61" Count="0" />
